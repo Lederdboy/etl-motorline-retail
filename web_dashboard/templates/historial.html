@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Historial - MotorLine ETL{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="bi bi-clock-history"></i> Historial de Ejecuciones
+        </h2>
+    </div>
+</div>
+
+<!-- Historial Jenkins -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Ejecuciones del Pipeline</h5>
+            </div>
+            <div class="card-body">
+                {% if builds %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Build #</th>
+                                <th>Estado</th>
+                                <th>Duración</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for build in builds %}
+                            <tr>
+                                <td><strong>#{{ build.number }}</strong></td>
+                                <td>
+                                    {% if build.result == 'SUCCESS' %}
+                                        <span class="badge bg-success">✓ EXITOSO</span>
+                                    {% elif build.result == 'FAILURE' %}
+                                        <span class="badge bg-danger">✗ FALLIDO</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">⏳ EN PROGRESO</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ build.duration }}</td>
+                                <td>{{ build.timestamp }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">
+                    No hay historial de ejecuciones disponible.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reportes Generados -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-file-earmark-excel"></i> Todos los Reportes Generados</h5>
+            </div>
+            <div class="card-body">
+                {% if reportes %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Archivo</th>
+                                <th>Fecha de Generación</th>
+                                <th>Tamaño</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reporte in reportes %}
+                            <tr>
+                                <td>
+                                    <i class="bi bi-file-earmark-excel text-success"></i> 
+                                    {{ reporte.nombre }}
+                                </td>
+                                <td>{{ reporte.fecha }}</td>
+                                <td>{{ reporte.tamanio }}</td>
+                                <td>
+                                    <a href="/descargar/{{ reporte.nombre }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-download"></i> Descargar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">
+                    No hay reportes generados aún.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - MotorLine ETL{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="bi bi-speedometer2"></i> Dashboard Ejecutivo
+        </h2>
+    </div>
+</div>
+
+<!-- KPIs Row -->
+{% if kpis %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-cart-check"></i> Total Ventas</h6>
+                <h3 class="mb-0">{{ kpis.total_ventas }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-cash-stack"></i> Ingresos Totales</h6>
+                <h3 class="mb-0">{{ kpis.ingresos_totales }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-receipt"></i> Ticket Promedio</h6>
+                <h3 class="mb-0">{{ kpis.ticket_promedio }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-percent"></i> Margen Promedio</h6>
+                <h3 class="mb-0">{{ kpis.margen_promedio }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Control Pipeline -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-play-circle"></i> Control del Pipeline ETL</h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <button id="btnEjecutarETL" class="btn btn-lg btn-success w-100" onclick="ejecutarETL()">
+                            <i class="bi bi-play-fill"></i> EJECUTAR ETL COMPLETO
+                        </button>
+                        <div id="loading" class="mt-3" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Ejecutando...</span>
+                            </div>
+                            <span class="ms-2">Ejecutando pipeline...</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        {% if last_build %}
+                        <div class="alert alert-{% if last_build.status == 'EXITOSO' %}success{% else %}danger{% endif %} mb-0">
+                            <strong>Última ejecución:</strong><br>
+                            Build #{{ last_build.build_number }}<br>
+                            Estado: {{ last_build.status }}<br>
+                            Duración: {{ last_build.duration }}
+                        </div>
+                        {% else %}
+                        <div class="alert alert-secondary mb-0">
+                            No hay ejecuciones previas
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Ventas Mensuales</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="chartVentasMensuales"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-building"></i> Ventas por Sucursal</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="chartVentasSucursal"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reportes Recientes -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-file-earmark-excel"></i> Reportes Generados (Últimos 5)</h5>
+            </div>
+            <div class="card-body">
+                {% if reportes %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Archivo</th>
+                                <th>Fecha</th>
+                                <th>Tamaño</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reporte in reportes[:5] %}
+                            <tr>
+                                <td><i class="bi bi-file-earmark-excel text-success"></i> {{ reporte.nombre }}</td>
+                                <td>{{ reporte.fecha }}</td>
+                                <td>{{ reporte.tamanio }}</td>
+                                <td>
+                                    <a href="/descargar/{{ reporte.nombre }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-download"></i> Descargar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end mt-3">
+                    <a href="/historial" class="btn btn-outline-primary">
+                        Ver todos los reportes <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> No hay reportes generados aún. Ejecuta el pipeline ETL para generar el primer reporte.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Ejecutar ETL
+function ejecutarETL() {
+    if (!confirm('¿Está seguro de ejecutar el pipeline ETL? Esto puede tomar aproximadamente 80 segundos.')) {
+        return;
+    }
+    
+    document.getElementById('btnEjecutarETL').disabled = true;
+    document.getElementById('loading').style.display = 'block';
+    
+    fetch('/api/ejecutar-etl', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Pipeline ETL iniciado exitosamente. Recibirá una notificación por email cuando termine.');
+            setTimeout(() => location.reload(), 3000);
+        } else {
+            alert('Error: ' + data.message);
+            document.getElementById('btnEjecutarETL').disabled = false;
+            document.getElementById('loading').style.display = 'none';
+        }
+    })
+    .catch(error => {
+        alert('Error de conexión: ' + error);
+        document.getElementById('btnEjecutarETL').disabled = false;
+        document.getElementById('loading').style.display = 'none';
+    });
+}
+
+// Gráfico Ventas Mensuales
+{% if ventas_mensuales %}
+const ctxMensuales = document.getElementById('chartVentasMensuales').getContext('2d');
+new Chart(ctxMensuales, {
+    type: 'line',
+    data: {
+        labels: {{ ventas_mensuales.labels | tojson }},
+        datasets: [{
+            label: 'Ventas (S/.)',
+            data: {{ ventas_mensuales.values | tojson }},
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+{% endif %}
+
+// Gráfico Ventas por Sucursal
+{% if ventas_sucursal %}
+const ctxSucursal = document.getElementById('chartVentasSucursal').getContext('2d');
+new Chart(ctxSucursal, {
+    type: 'bar',
+    data: {
+        labels: {{ ventas_sucursal.labels | tojson }},
+        datasets: [{
+            label: 'Ventas (S/.)',
+            data: {{ ventas_sucursal.values | tojson }},
+            backgroundColor: 'rgba(54, 96, 146, 0.8)'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+{% endif %}
+</script>
+{% endblock %}
