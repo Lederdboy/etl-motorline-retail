@@ -27,7 +27,7 @@ etl_retail/
     ├── templates/         # Vistas HTML
     ├── static/            # CSS, JS, imágenes
     └── utils/             # Utilidades (Jenkins API, etc.)
-
+```
 
 ## 🚀 Tecnologías Utilizadas
 - **Python 3.13**: Lenguaje principal
@@ -85,7 +85,7 @@ pipeline {
         }
     }
 }
-
+```
 
 ## 📊 Dashboard Web
 
