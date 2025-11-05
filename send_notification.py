@@ -12,9 +12,9 @@ print("NOTIFY - Enviando notificacion por email")
 print("="*80)
 
 # Configuracion de email
-email_destino = "gibaja.eustaquio@gmail.com"
-email_remitente = "jkalef96@gmail.com"  # TU EMAIL REAL
-password = "wflg cocn oevy yiis"  # App Password de Gmail
+email_destino = "" # EMAIL DESTINO REAL
+email_remitente = ""  # TU EMAIL REAL
+password = "xxx xxx xxx xxx"  # App Password de Gmail
 
 workspace = os.getcwd()
 

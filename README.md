@@ -15,19 +15,19 @@ Pipeline ETL automatizado con Jenkins para el procesamiento y análisis de datos
 
 ## 🏗️ Arquitectura del Proyecto
 
-\\\
+```bash
 etl_retail/
-├── extract_data.py          # Extracción de datos desde fuente
-├── transform_data.py        # Limpieza y transformación
-├── load_excel.py           # Generación de reportes Excel
-├── send_notification.py    # Sistema de notificaciones
-├── output/                 # Reportes generados
-└── web_dashboard/          # Dashboard web interactivo
+├── extract_data.py        # Extracción de datos desde fuente
+├── transform_data.py      # Limpieza y transformación
+├── load_excel.py          # Generación de reportes Excel
+├── send_notification.py   # Sistema de notificaciones
+├── output/                # Reportes generados
+└── web_dashboard/         # Dashboard web interactivo
     ├── app.py             # Aplicación Flask
     ├── templates/         # Vistas HTML
-    ├── static/           # CSS, JS, imágenes
-    └── utils/            # Utilidades (Jenkins API, etc.)
-\\\
+    ├── static/            # CSS, JS, imágenes
+    └── utils/             # Utilidades (Jenkins API, etc.)
+
 
 ## 🚀 Tecnologías Utilizadas
 - **Python 3.13**: Lenguaje principal
@@ -46,7 +46,7 @@ etl_retail/
 
 ### Configuración del entorno
 
-\\\ash
+\\ Bash
 # Clonar el repositorio
 git clone https://github.com/Lederdboy/etl-motorline-retail.git
 cd etl-motorline-retail
@@ -57,8 +57,9 @@ pip install -r requirements_web.txt
 
 ## ⚙️ Configuración de Jenkins
 
-### Pipeline Jenkinsfile
-\\\groovy
+### 🧩 Pipeline Jenkinsfile
+
+```groovy
 pipeline {
     agent any
     stages {
@@ -84,12 +85,12 @@ pipeline {
         }
     }
 }
-\\\
+
 
 ## 📊 Dashboard Web
 
 ### Ejecutar dashboard localmente
-\\\ash
+\\ Bash
 cd web_dashboard
 python app.py
 \\\
@@ -108,7 +109,7 @@ Acceder a: \http://localhost:5000\
 ### Ramas
 - \main\: Código en producción
 - \development\: Desarrollo activo
-- \eature/*\: Nuevas funcionalidades
+- \Feature/*\: Nuevas funcionalidades
 
 ### Contribuir
 1. Crear rama desde \development\
@@ -120,6 +121,10 @@ Acceder a: \http://localhost:5000\
 
 ## 👥 Equipo de Desarrollo
 Proyecto desarrollado por estudiantes de CERTUS
+ - Aguilar Rodriguez, Josue Kalef
+ - Ccopa Chavez Jack
+ - Grados Gamarra Ronaldo Michell
+ - Veliz Veliz Maria Alejandra
 
 ## 📝 Licencia
 Proyecto académico - CERTUS 2025
