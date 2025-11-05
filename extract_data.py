@@ -1,3 +1,10 @@
+"""
+ETL MotorLine - Módulo de Extracción de Datos
+Autor: Equipo CERTUS
+Fecha: Noviembre 2025
+Descripción: Extrae datos de ventas desde la base de datos
+"""
+
 import mysql.connector
 import pandas as pd
 import os
